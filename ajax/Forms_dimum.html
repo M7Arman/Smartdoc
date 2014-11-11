@@ -1,0 +1,132 @@
+<div class="row">
+	<div id="breadcrumb" class="col-md-12">
+		<ol class="breadcrumb">
+			<li><a href="index.html">Գլխավոր</a></li>
+			<li>Կաղապարներ</li>
+			<li><a href="#">Դիմում</a></li>
+		</ol>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-10 col-sm-10">
+		<div class="box">
+			<div class="box-header">
+				<div class="box-icons">
+					<a class="collapse-link">
+						<i class="fa fa-chevron-up"></i>
+					</a>
+					<a class="expand-link">
+						<i class="fa fa-expand"></i>
+					</a>
+				</div>
+				<div class="no-move"></div>
+			</div>
+			<div class="box-content">
+				<h4 class="page-header">Խմբագրել</h4>
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Անուն</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control" placeholder="Պողոս">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Ազգանուն</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control" placeholder="Պողոսյան">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Կազմակերպություն</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control" placeholder="Կազմակերպություն">
+						</div>
+					</div>
+						<div class="form-group">
+						<label class="col-sm-2 control-label">Հասցե</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control" placeholder="Տիգրան Մեծի 1/21">
+						</div>
+					</div>
+					<div class="form-group">
+							<label class="col-sm-2 control-label">Հեռախոսահամար</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" placeholder="+(374)********" name="phoneNumber" />
+							</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Քաղաք</label>
+						<div class="col-sm-4">
+							<select id="s2_with_tag"  class="populate placeholder"  placeholder="Վանաձոր">
+							    <option></option>
+								<option>Աբովյան</option>
+								<option>Վանաձոր</option>
+								<option>Գյումրի</option>
+								<option>Երևան</option>
+								<option>Իջևան</option>
+								<option>Սպիտակ</option>
+								<option>Սևան</option>
+								<option>Դիլիջան</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Ամսաթիվ</label>
+						<div class="col-sm-2">
+							<input type="text" id="input_date" class="form-control" placeholder="01/01/1970">
+							<span class="fa fa-calendar"></span>
+							</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="form-styles">Բովանդակություն</label>
+						<div class="col-sm-10">
+								<textarea class="form-control" rows="5"></textarea>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+					<div class="form-group">
+						<div class="col-sm-4">
+							<button type="submit" class="btn btn-primary">Ստեղծել</button>
+							<button type="submit" class="btn btn-primary">Բեռնել</button>
+						<label class="col-sm-2 control-label">Տիպ</label>
+						<div class="col-sm-3">
+							<select id="s2_with_tag"  class="populate placeholder"  placeholder="doc">
+								<option>doc</option>
+							    <option>docx</option>
+							</select>
+						</div>
+			</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+// Run Select2 plugin on elements
+function DemoSelect2(){
+	$('#s2_with_tag').select2({placeholder: "Select OS"});
+	$('#s2_country').select2();
+}
+// Run timepicker
+function DemoTimePicker(){
+	$('#input_time').timepicker({setDate: new Date()});
+}
+$(document).ready(function() {
+	// Create Wysiwig editor for textare
+	TinyMCEStart('#wysiwig_simple', null);
+	TinyMCEStart('#wysiwig_full', 'extreme');
+	// Add slider for change test input length
+	FormLayoutExampleInputLength($( ".slider-style" ));
+	// Initialize datepicker
+	$('#input_date').datepicker({setDate: new Date()});
+	// Load Timepicker plugin
+	LoadTimePickerScript(DemoTimePicker);
+	// Add tooltip to form-controls
+	$('.form-control').tooltip();
+	LoadSelect2Script(DemoSelect2);
+	// Load example of form validation
+	LoadBootstrapValidatorScript(DemoFormValidator);
+	// Add drag-n-drop feature to boxes
+	WinMove();
+});
+</script>
