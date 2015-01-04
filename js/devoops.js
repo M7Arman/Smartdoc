@@ -239,6 +239,7 @@ function LoadSparkLineScript(callback){
 	Main scripts used by theme
 ---------------------------------------------*/
 //
+// ֊֊ NECESSARY --
 //  Function for load content from url and put in $('.ajax-content') block
 //
 function LoadAjaxContent(url){
@@ -2204,17 +2205,21 @@ function DrawFullCalendar(){
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
 $(document).ready(function () {
-	$('.show-sidebar').on('click', function (e) {
-		e.preventDefault();
-		$('div#main').toggleClass('sidebar-show');
-	});
-	var ajax_url = location.hash.replace(/^#/, '');
+	var height = window.innerHeight - 50;
+	$('#main').css('min-height', height);
+
+	var ajax_url = location.hash.replace(/^#/, ''); // deletes '#' from URL endpoint
 	if (ajax_url.length < 1) {
 		ajax_url = 'ajax/home.html';
 	}
 	LoadAjaxContent(ajax_url);
+	$('.show-sidebar').on('click', function (e) {
+		e.preventDefault();
+		$('div#main').toggleClass('sidebar-show');
+	});
+
 	$('.main-menu').on('click', 'a', function (e) {
-		var parents = $(this).parents('li');
+		var parents = $(this).parents('li'); // [ $(this) ] = [ submitted 'a' ]
 		var li = $(this).closest('li.dropdown');
 		var another_items = $('.main-menu li').not(parents);
 		another_items.find('a').removeClass('active');
@@ -2222,22 +2227,20 @@ $(document).ready(function () {
 		if ($(this).hasClass('dropdown-toggle') || $(this).closest('li').find('ul').length == 0) {
 			$(this).addClass('active-parent');
 			var current = $(this).next();
-			if (current.is(':visible')) {
+			if (current.is(':visible')) { // if window is open, then close it.
 				li.find("ul.dropdown-menu").slideUp('fast');
 				li.find("ul.dropdown-menu a").removeClass('active')
-			}
-			else {
+			} else { // if window is close, then open it.
 				another_items.find("ul.dropdown-menu").slideUp('fast');
 				current.slideDown('fast');
 			}
-		}
-		else {
+		} else {
 			if (li.find('a.dropdown-toggle').hasClass('active-parent')) {
 				var pre = $(this).closest('ul.dropdown-menu');
 				pre.find("li.dropdown").not($(this).closest('li')).find('ul.dropdown-menu').slideUp('fast');
 			}
 		}
-		if ($(this).hasClass('active') == false) {
+		if ($(this).hasClass('active')) {
 			$(this).parents("ul.dropdown-menu").find('a').removeClass('active');
 			$(this).addClass('active')
 		}
@@ -2257,13 +2260,14 @@ $(document).ready(function () {
 			e.preventDefault();
 		}
 	});
-	var height = window.innerHeight - 49;
-	$('#main').css('min-height', height)
+
+	$('#main')
 		.on('click', '.expand-link', function (e) {
 			var body = $('body');
 			e.preventDefault();
 			var box = $(this).closest('div.box');
 			var button = $(this).find('i');
+			// delete corresponding HTML class if it's exist, or add the class if it's no exist.
 			button.toggleClass('fa-expand').toggleClass('fa-compress');
 			box.toggleClass('expanded');
 			body.toggleClass('body-expanded');
@@ -2290,30 +2294,7 @@ $(document).ready(function () {
 				box.resize();
 				box.find('[id^=map-]').resize();
 			}, 50);
-		})
-		.on('click', '.close-link', function (e) {
-			e.preventDefault();
-			var content = $(this).closest('div.box');
-			content.remove();
 		});
-	$('body').on('click', 'a.close-link', function(e){
-		e.preventDefault();
-		CloseModalBox();
-	});
-	$('#top-panel').on('click','a', function(e){
-		if ($(this).hasClass('ajax-link')) {
-			e.preventDefault();
-			if ($(this).hasClass('add-full')) {
-				$('#content').addClass('full-content');
-			}
-			else {
-				$('#content').removeClass('full-content');
-			}
-			var url = $(this).attr('href');
-			window.location.hash = url;
-			LoadAjaxContent(url);
-		}
-	});
 	$('#search').on('keydown', function(e){
 		if (e.keyCode == 13){
 			e.preventDefault();
