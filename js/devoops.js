@@ -11,11 +11,11 @@
 // require moment.js
 //
 function LoadCalendarScript(callback){
+
 	function LoadFullCalendarScript(){
 		if(!$.fn.fullCalendar){
 			$.getScript('plugins/fullcalendar/fullcalendar.js', callback);
-		}
-		else {
+		} else {
 			if (callback && typeof(callback) === "function") {
 				callback();
 			}
@@ -23,25 +23,11 @@ function LoadCalendarScript(callback){
 	}
 	if (!$.fn.moment){
 		$.getScript('plugins/moment/moment.min.js', LoadFullCalendarScript);
-	}
-	else {
+	} else {
 		LoadFullCalendarScript();
 	}
 }
-//
-// Dynamically load  OpenStreetMap Plugin
-// homepage: http://openlayers.org
-//
-function LoadOpenLayersScript(callback){
-	if (!$.fn.OpenLayers){
-		$.getScript('http://www.openlayers.org/api/OpenLayers.js', callback);
-	}
-	else {
-		if (callback && typeof(callback) === "function") {
-			callback();
-		}
-	}
-}
+
 //
 //  Dynamically load  jQuery Timepicker plugin
 //  homepage: http://trentrichardson.com/examples/timepicker/
@@ -260,7 +246,7 @@ function LoadAjaxContent(url){
 	});
 }
 //
-//  Function maked all .box selector is draggable, to disable for concrete element add class .no-drop
+//  Function made all .box selector is draggable, to disable for concrete element add class .no-drop
 //
 function WinMove(){
 	$( "div.box").not('.no-drop')
@@ -407,43 +393,7 @@ function DrawKnob(elem){
 			}
 		});
 }
-//
-// Create OpenLayers map with required options and return map as object
-//
-function drawMap(lon, lat, elem, layers) {
-	var LayersArray = [];
-	// Map initialization
-	var map = new OpenLayers.Map(elem);
-	// Add layers on map
-	map.addLayers(layers);
-	// WGS 1984 projection
-	var epsg4326 =  new OpenLayers.Projection("EPSG:4326");
-	//The map projection (Spherical Mercator)
-	var projectTo = map.getProjectionObject();
-	// Max zoom = 17
-	var zoom=10;
-	map.zoomToMaxExtent();
-	// Set longitude/latitude
-	var lonlat = new OpenLayers.LonLat(lon, lat);
-	map.setCenter(lonlat.transform(epsg4326, projectTo), zoom);
-	var layerGuest = new OpenLayers.Layer.Vector("You are here");
-	// Define markers as "features" of the vector layer:
-	var guestMarker = new OpenLayers.Feature.Vector(
-		new OpenLayers.Geometry.Point(lon, lat).transform(epsg4326, projectTo)
-	);
-	layerGuest.addFeatures(guestMarker);
-	LayersArray.push(layerGuest);
-	map.addLayers(LayersArray);
-	// If map layers > 1 then show checker
-	if (layers.length > 1){
-		map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':true}));
-	}
-	// Link to current position
-	map.addControl(new OpenLayers.Control.Permalink());
-	// Show current mouse coords
-	map.addControl(new OpenLayers.Control.MousePosition({ displayProjection: epsg4326 }));
-	return map
-}
+
 //
 //  Function for create 2 dates in human-readable format (with leading zero)
 //
@@ -493,6 +443,7 @@ function DashboardTabChecker(){
 }
 //
 // Helper for run TinyMCE editor with textarea's
+// NECESSARY for 'forms_layouts.html'
 //
 function TinyMCEStart(elem, mode){
 	var plugins = [];
@@ -642,7 +593,6 @@ function CloseModalBox(){
 })( jQuery );
 //
 // Beauty Hover Plugin (backlight row and col when cell in mouseover)
-//
 //
 (function( $ ){
 	$.fn.beautyHover = function() {
@@ -1686,6 +1636,7 @@ function DrawKnobDashboard(){
 		srv_monitoring_selectors.forEach(RedrawKnob);
 	}, 3000);
 }
+
 /*-------------------------------------------
 	Function for File upload page (form_file_uploader.html)
 ---------------------------------------------*/
@@ -1710,52 +1661,7 @@ function FileUpload(){
 		}
 	});
 }
-/*-------------------------------------------
-	Function for OpenStreetMap page (maps.html)
----------------------------------------------*/
-//
-// Load GeoIP JSON data and draw 3 maps
-//
-function LoadTestMap(){
-	$.getJSON("http://www.telize.com/geoip?callback=?",
-		function(json) {
-			var osmap = new OpenLayers.Layer.OSM("OpenStreetMap");//создание слоя карты
-			var googlestreets = new OpenLayers.Layer.Google("Google Streets", {numZoomLevels: 22,visibility: false});
-			var googlesattelite = new OpenLayers.Layer.Google( "Google Sattelite", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
-			var map1_layers = [googlestreets,osmap, googlesattelite];
-			// Create map in element with ID - map-1
-			var map1 = drawMap(json.longitude, json.latitude, "map-1", map1_layers);
-			$("#map-1").resize(function(){ setTimeout(map1.updateSize(), 500); });
-			// Create map in element with ID - map-2
-			var osmap1 = new OpenLayers.Layer.OSM("OpenStreetMap");//создание слоя карты
-			var map2_layers = [osmap1];
-			var map2 = drawMap(json.longitude, json.latitude, "map-2", map2_layers);
-			$("#map-2").resize(function(){ setTimeout(map2.updateSize(), 500); });
-			// Create map in element with ID - map-3
-			var sattelite = new OpenLayers.Layer.Google( "Google Sattelite", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
-			var map3_layers = [sattelite];
-			var map3 = drawMap(json.longitude, json.latitude, "map-3", map3_layers);
-			$("#map-3").resize(function(){ setTimeout(map3.updateSize(), 500); });
-		}
-	);
-}
-/*-------------------------------------------
-	Function for Fullscreen Map page (map_fullscreen.html)
----------------------------------------------*/
-//
-// Create Fullscreen Map
-//
-function FullScreenMap(){
-	$.getJSON("http://www.telize.com/geoip?callback=?",
-		function(json) {
-			var osmap = new OpenLayers.Layer.OSM("OpenStreetMap");//создание слоя карты
-			var googlestreets = new OpenLayers.Layer.Google("Google Streets", {numZoomLevels: 22,visibility: false});
-			var googlesattelite = new OpenLayers.Layer.Google( "Google Sattelite", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
-			var map1_layers = [googlestreets,osmap, googlesattelite];
-			var map_fs = drawMap(json.longitude, json.latitude, "full-map", map1_layers);
-		}
-	);
-}
+
 /*-------------------------------------------
 	Function for Flickr Gallery page (gallery_flickr.html)
 ---------------------------------------------*/
@@ -1781,250 +1687,7 @@ function displayFlickrImages(data){
 			$('#box-one-content').fadeIn('slow');
 		}, 100);
 }
-/*-------------------------------------------
-	Function for Form Layout page (form layouts.html)
----------------------------------------------*/
-//
-// Example form validator function
-//
-function DemoFormValidator(){
-	$('#defaultForm').bootstrapValidator({
-		message: 'This value is not valid',
-		fields: {
-			username: {
-				message: 'The username is not valid',
-				validators: {
-					notEmpty: {
-						message: 'The username is required and can\'t be empty'
-					},
-					stringLength: {
-						min: 6,
-						max: 30,
-						message: 'The username must be more than 6 and less than 30 characters long'
-					},
-					regexp: {
-						regexp: /^[a-zA-Z0-9_\.]+$/,
-						message: 'The username can only consist of alphabetical, number, dot and underscore'
-					}
-				}
-			},
-			country: {
-				validators: {
-					notEmpty: {
-						message: 'The country is required and can\'t be empty'
-					}
-				}
-			},
-			acceptTerms: {
-				validators: {
-					notEmpty: {
-						message: 'You have to accept the terms and policies'
-					}
-				}
-			},
-			email: {
-				validators: {
-					notEmpty: {
-						message: 'The email address is required and can\'t be empty'
-					},
-					emailAddress: {
-						message: 'The input is not a valid email address'
-					}
-				}
-			},
-			website: {
-				validators: {
-					uri: {
-						message: 'The input is not a valid URL'
-					}
-				}
-			},
-			phoneNumber: {
-				validators: {
-					digits: {
-						message: 'The value can contain only digits'
-					}
-				}
-			},
-			color: {
-				validators: {
-					hexColor: {
-						message: 'The input is not a valid hex color'
-					}
-				}
-			},
-			zipCode: {
-				validators: {
-					usZipCode: {
-						message: 'The input is not a valid US zip code'
-					}
-				}
-			},
-			password: {
-				validators: {
-					notEmpty: {
-						message: 'The password is required and can\'t be empty'
-					},
-					identical: {
-						field: 'confirmPassword',
-						message: 'The password and its confirm are not the same'
-					}
-				}
-			},
-			confirmPassword: {
-				validators: {
-					notEmpty: {
-						message: 'The confirm password is required and can\'t be empty'
-					},
-					identical: {
-						field: 'password',
-						message: 'The password and its confirm are not the same'
-					}
-				}
-			},
-			ages: {
-				validators: {
-					lessThan: {
-						value: 100,
-						inclusive: true,
-						message: 'The ages has to be less than 100'
-					},
-					greaterThan: {
-						value: 10,
-						inclusive: false,
-						message: 'The ages has to be greater than or equals to 10'
-					}
-				}
-			}
-		}
-	});
-}
-//
-// Function for Dynamically Change input size on Form Layout page
-//
-function FormLayoutExampleInputLength(selector){
-	var steps = [
-		"col-sm-1",
-		"col-sm-2",
-		"col-sm-3",
-		"col-sm-4",
-		"col-sm-5",
-		"col-sm-6",
-		"col-sm-7",
-		"col-sm-8",
-		"col-sm-9",
-		"col-sm-10",
-		"col-sm-11",
-		"col-sm-12"
-	];
-	selector.slider({
-	   range: 'min',
-		value: 1,
-		min: 0,
-		max: 11,
-		step: 1,
-		slide: function(event, ui) {
-			if (ui.value < 1) {
-				return false;
-			}
-			var input = $("#form-styles");
-			var f = input.parent();
-			f.removeClass();
-			f.addClass(steps[ui.value]);
-			input.attr("placeholder",'.'+steps[ui.value]);
-		}
-	});
-}
-/*-------------------------------------------
-	Functions for Progressbar page (ui_progressbars.html)
----------------------------------------------*/
-//
-// Function for Knob clock
-//
-function RunClock() {
-	var second = $(".second");
-	var minute = $(".minute");
-	var hour = $(".hour");
-	var d = new Date();
-	var s = d.getSeconds();
-	var m = d.getMinutes();
-	var h = d.getHours();
-	if (h > 11) {h = h-12;}
-		$('#knob-clock-value').html(h+':'+m+':'+s);
-		second.val(s).trigger("change");
-		minute.val(m).trigger("change");
-		hour.val(h).trigger("change");
-}
-//
-// Function for create test sliders on Progressbar page
-//
-function CreateAllSliders(){
-	$(".slider-default").slider();
-	var slider_range_min_amount = $(".slider-range-min-amount");
-	var slider_range_min = $(".slider-range-min");
-	var slider_range_max = $(".slider-range-max");
-	var slider_range_max_amount = $(".slider-range-max-amount");
-	var slider_range = $(".slider-range");
-	var slider_range_amount = $(".slider-range-amount");
-	slider_range_min.slider({
-		range: "min",
-		value: 37,
-		min: 1,
-		max: 700,
-		slide: function( event, ui ) {
-			slider_range_min_amount.val( "$" + ui.value );
-		}
-	});
-	slider_range_min_amount.val("$" + slider_range_min.slider( "value" ));
-	slider_range_max.slider({
-		range: "max",
-		min: 1,
-		max: 100,
-		value: 2,
-		slide: function( event, ui ) {
-			slider_range_max_amount.val( ui.value );
-		}
-	});
-	slider_range_max_amount.val(slider_range_max.slider( "value" ));
-	slider_range.slider({
-		range: true,
-		min: 0,
-		max: 500,
-		values: [ 75, 300 ],
-		slide: function( event, ui ) {
-			slider_range_amount.val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-		}
-	});
-	slider_range_amount.val( "$" + slider_range.slider( "values", 0 ) +
-	  " - $" + slider_range.slider( "values", 1 ) );
-	$( "#equalizer > div.progress > div" ).each(function() {
-		// read initial values from markup and remove that
-		var value = parseInt( $( this ).text(), 10 );
-		$( this ).empty().slider({
-			value: value,
-			range: "min",
-			animate: true,
-			orientation: "vertical"
-		});
-	});
-}
-/*-------------------------------------------
-	Function for jQuery-UI page (ui_jquery-ui.html)
----------------------------------------------*/
-//
-// Function for make all Date-Time pickers on page
-//
-function AllTimePickers(){
-	$('#datetime_example').datetimepicker({});
-	$('#time_example').timepicker({
-		hourGrid: 4,
-		minuteGrid: 10,
-		timeFormat: 'hh:mm tt'
-	});
-	$('#date3_example').datepicker({ numberOfMonths: 3, showButtonPanel: true});
-	$('#date3-1_example').datepicker({ numberOfMonths: 3, showButtonPanel: true});
-	$('#date_example').datepicker({});
-}
+
 /*-------------------------------------------
 	Function for Calendar page (calendar.html)
 ---------------------------------------------*/
@@ -2195,6 +1858,164 @@ function DrawCalendar(){
 function DrawFullCalendar(){
 	LoadCalendarScript(DrawCalendar);
 }
+
+/*-------------------------------------------
+	Function for Form Layout page (forms_layouts.html)
+---------------------------------------------*/
+//
+// Example form validator function
+// NECASSARY
+//
+function DemoFormValidator(){
+	$('#defaultForm').bootstrapValidator({
+		message: 'This value is not valid',
+		fields: {
+			username: {
+				message: 'The username is not valid',
+				validators: {
+					notEmpty: {
+						message: 'The username is required and can\'t be empty'
+					},
+					stringLength: {
+						min: 6,
+						max: 30,
+						message: 'The username must be more than 6 and less than 30 characters long'
+					},
+					regexp: {
+						regexp: /^[a-zA-Z0-9_\.]+$/,
+						message: 'The username can only consist of alphabetical, number, dot and underscore'
+					}
+				}
+			},
+			country: {
+				validators: {
+					notEmpty: {
+						message: 'The country is required and can\'t be empty'
+					}
+				}
+			},
+			acceptTerms: {
+				validators: {
+					notEmpty: {
+						message: 'You have to accept the terms and policies'
+					}
+				}
+			},
+			email: {
+				validators: {
+					notEmpty: {
+						message: 'The email address is required and can\'t be empty'
+					},
+					emailAddress: {
+						message: 'The input is not a valid email address'
+					}
+				}
+			},
+			website: {
+				validators: {
+					uri: {
+						message: 'The input is not a valid URL'
+					}
+				}
+			},
+			phoneNumber: {
+				validators: {
+					digits: {
+						message: 'The value can contain only digits'
+					}
+				}
+			},
+			color: {
+				validators: {
+					hexColor: {
+						message: 'The input is not a valid hex color'
+					}
+				}
+			},
+			zipCode: {
+				validators: {
+					usZipCode: {
+						message: 'The input is not a valid US zip code'
+					}
+				}
+			},
+			password: {
+				validators: {
+					notEmpty: {
+						message: 'The password is required and can\'t be empty'
+					},
+					identical: {
+						field: 'confirmPassword',
+						message: 'The password and its confirm are not the same'
+					}
+				}
+			},
+			confirmPassword: {
+				validators: {
+					notEmpty: {
+						message: 'The confirm password is required and can\'t be empty'
+					},
+					identical: {
+						field: 'password',
+						message: 'The password and its confirm are not the same'
+					}
+				}
+			},
+			ages: {
+				validators: {
+					lessThan: {
+						value: 100,
+						inclusive: true,
+						message: 'The ages has to be less than 100'
+					},
+					greaterThan: {
+						value: 10,
+						inclusive: false,
+						message: 'The ages has to be greater than or equals to 10'
+					}
+				}
+			}
+		}
+	});
+}
+//
+// Function for Dynamically Change input size on Form Layout page
+// NECASSARY for 'forms_layouts.html'
+//
+function FormLayoutExampleInputLength(selector){
+	var steps = [
+		"col-sm-1",
+		"col-sm-2",
+		"col-sm-3",
+		"col-sm-4",
+		"col-sm-5",
+		"col-sm-6",
+		"col-sm-7",
+		"col-sm-8",
+		"col-sm-9",
+		"col-sm-10",
+		"col-sm-11",
+		"col-sm-12"
+	];
+	selector.slider({
+	   range: 'min',
+		value: 1,
+		min: 0,
+		max: 11,
+		step: 1,
+		slide: function(event, ui) {
+			if (ui.value < 1) {
+				return false;
+			}
+			var input = $("#form-styles");
+			var f = input.parent();
+			f.removeClass();
+			f.addClass(steps[ui.value]);
+			input.attr("placeholder",'.'+steps[ui.value]);
+		}
+	});
+}
+
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
 //
