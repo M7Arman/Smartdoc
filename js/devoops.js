@@ -27,21 +27,6 @@ function LoadCalendarScript(callback){
 		LoadFullCalendarScript();
 	}
 }
-
-//
-//  Dynamically load  jQuery Timepicker plugin
-//  homepage: http://trentrichardson.com/examples/timepicker/
-//
-function LoadTimePickerScript(callback){
-	if (!$.fn.timepicker){
-		$.getScript('plugins/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.min.js', callback);
-	}
-	else {
-		if (callback && typeof(callback) === "function") {
-			callback();
-		}
-	}
-}
 //
 //  Dynamically load Bootstrap Validator Plugin
 //  homepage: https://github.com/nghuuphuoc/bootstrapvalidator
@@ -443,7 +428,8 @@ function DashboardTabChecker(){
 }
 //
 // Helper for run TinyMCE editor with textarea's
-// NECESSARY for 'forms_layouts.html'
+// for 'forms_layouts.html' 
+// LOOK: for sure (наверняка) delet.
 //
 function TinyMCEStart(elem, mode){
 	var plugins = [];
